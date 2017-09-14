@@ -1,10 +1,14 @@
 # Full Stack Project - Yelp
 
-## State Shape
+## State Shape Outline
 + `Entities`
+  + `Businesses`
+  + `Users`
+  + `Reviews`
+  + `Photos`
 + `UI`
 + `Errors`
-
++ `Session`
 
 ## Yelp Sample State
 
@@ -50,18 +54,34 @@
     reviews: {
       15: {
         id: 15,
-        business_id: 2
         body: "Best ice cream in the city!",
         rating: 5,
+        business_id: 2,
         reviewer_id: 7
       }
       18: {
         id: 18,
-        business_id: 1
         body: "I'm addicted to their strawberry matcha latte.",
         rating: 4,
+        business_id: 1,
         reviewer_id: 8  
       },
+    }
+    photos: {
+      22: {
+        id: 22,
+        img_url: "https://s3-media1.fl.yelpcdn.com/bphoto/UEtTcuWl6mMKArY5fODiAA/o.jpg"
+        img_caption: "A generous single scoop of Cooper Fox (single malt cherrywood whiskey) on a waffle cone."
+        business_id: 2,
+        user_id: 1
+      }
+      25: {
+        id: 25,
+        img_url: "https://s3-media4.fl.yelpcdn.com/bphoto/FrcxSuTVhXQq8puPUkBx-Q/o.jpg"
+        img_caption: "Strawberry Matcha Latte, Matchella, and Vanilla Rum & Matcha Custard Cakes"
+        business_id: 1,
+        user_id: 1
+      }
     }
   },
   ui: {
