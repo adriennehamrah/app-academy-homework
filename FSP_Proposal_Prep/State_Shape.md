@@ -4,6 +4,7 @@
 + `Entities`
   + `Businesses`
   + `Users`
+  + `test`
   + `Reviews`
   + `Photos`
 + `UI`
