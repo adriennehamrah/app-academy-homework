@@ -1,0 +1,90 @@
+.splash, .index {
+  font-family: sans-serif;
+}
+.user-nav{
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 10px;
+}
+
+.user-nav a {
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.user-nav a:hover {
+  text-decoration: underline;
+  color: aquamarine;
+}
+
+.current-user {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px;
+}
+
+.current-user a {
+  text-decoration: none;
+}
+
+.current-user p {
+  color: cadetblue;
+}
+
+.main{
+  display: flex;
+  background-image: url("splash.jpg");
+  width:100%;
+  height: 500px;
+}
+
+.tagline {
+  display: flex;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  width: 1000px;
+  height: 60px;
+  margin-left: 40px;
+  margin-top: 100px;
+}
+
+.nav-bar {
+  display: flex;
+  padding: 0 10px;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(0,150,136, .2);
+}
+
+.nav-bar a {
+  display: flex;
+  align-content: space-between;
+  font-size: 20px;
+  text-decoration: none;
+  color: lightseagreen;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
+  font-weight: bolder;
+}
+
+.index-header p {
+  font-size: 12px;
+
+}
+
+.index-header img {
+  height: 30px;
+  width: 30px;
+}
+
+.h3 {
+  font-size: 20px;
+}
+
+footer {
+  font-size: 10px;
+  text-align: right;
+}
