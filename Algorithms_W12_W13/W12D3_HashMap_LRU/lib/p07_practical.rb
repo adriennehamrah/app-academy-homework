@@ -12,9 +12,9 @@ def can_string_be_palindrome?(string)
     counter[ch] = count + 1
   end
 
-  odds, evens = 0, 0
+  odds = 0
   counter.each do |key, val|
-    val.odd? ? odds += 1 : evens += 1
+    odds += 1 if val.odd?
   end
 
   return true if odds.between?(0, 1)
