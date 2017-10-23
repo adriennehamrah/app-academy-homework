@@ -26,5 +26,5 @@ class BSTNode
       end
     end
   end
-  
+
 end
