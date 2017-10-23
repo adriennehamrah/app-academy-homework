@@ -11,11 +11,17 @@ class BinaryMinHeap
   end
 
   def extract
-    @store[0], @store[-1] = @store[-1], @store[0]
-    min = @store.pop
-    BinaryMinHeap.heapify_down(@store, 0, count)
+    raise "no element to extract" if count == 0
 
-    min
+    val = store[0]
+    if count > 1
+      store[0] = store.pop
+      self.class.heapify_down(store, 0, &prc)
+    else
+      store.pop
+    end
+
+    val
   end
 
   def peek
@@ -24,7 +30,7 @@ class BinaryMinHeap
 
   def push(val)
     @store.push(val)
-    BinaryMinHeap.heapify_up(@store, count - 1, count)
+    BinaryMinHeap.heapify_up(@store, count - 1, count, &@prc)
 
     val
   end
@@ -47,11 +53,12 @@ class BinaryMinHeap
   end
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
-    # return array if parent_idx == len - 1
-
     prc ||= Proc.new { |a, b| a <=> b }
     children = self.child_indices(len, parent_idx)
-    children
+
+    if children.all? { |child_idx| prc.call(array[parent_idx], array[child_idx]) <= 0 }
+      return array
+    end
 
     if children.empty?
       return array
@@ -61,14 +68,8 @@ class BinaryMinHeap
       smallest_child_idx = prc.call(array[children[0]], array[children[1]]) <= 0 ? children[0] : children[1]
     end
 
-    if smallest_child_idx
-      if prc.call(array[parent_idx], array[smallest_child_idx]) == 1
-        array[parent_idx], array[smallest_child_idx] = array[smallest_child_idx], array[parent_idx]
-        self.heapify_down(array, smallest_child_idx, len, &prc)
-      end
-    end
-
-    array
+    array[parent_idx], array[smallest_child_idx] = array[smallest_child_idx], array[parent_idx]
+    self.heapify_down(array, smallest_child_idx, len, &prc)
   end
 
   def self.heapify_up(array, child_idx, len = array.length, &prc)
