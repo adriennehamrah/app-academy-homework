@@ -34,20 +34,28 @@ class BinarySearchTree
 
   def delete(value)
     node = find(value)
+    if node.parent
+      side = node.parent.left == node ? 'left' : 'right'
+    end
+
     children = get_children(node)
 
     if children.empty?
       delete_parent_link(node)
     elsif children.length == 1
       children
-      update_parent(children[0], node.parent)
+      update_parent(children[0], node.parent, side)
     elsif children.length == 2
+      # get max of left subtree
       max_node = maximum(node.left)
       max_node_children = get_children(max_node)
-      update_parent(max_node, node.parent)
+      orig_parent = max_node.parent
+      max_node_side = max_node.parent.left == max_node ? 'left' : 'right'
+
+      update_parent(max_node, node.parent, side)
 
       unless max_node_children.empty?
-        update_parent(max_node_children[0], max_node.parent)
+        update_parent(max_node_children[0], orig_parent, max_node_side)
       end
     end
 
@@ -129,14 +137,16 @@ class BinarySearchTree
     end
   end
 
-  def update_parent(node, parent)
+  def update_parent(node, parent, side)
     # update parent's link to child node
     if parent.nil?
       @root = node
-    else
-      parent.left ? parent.right = node : parent.left = node
+    elsif side == 'left'
+      parent.left = node
+    elsif side == 'right'
+      parent.right = node
     end
-
+    p "inside update parent. Parent = #{parent.value} Parent.left = #{parent.left.value} Parent.right = #{parent.right.value}"
     #update child node's link to parent
     node.parent = parent
   end
