@@ -2,8 +2,9 @@ class DynamicProgramming
 
   def initialize
     @blair_cache = { 1 => 1, 2 => 2 }
-    @frog_bottom_cache = {}
-    @frog_top_cache = {}
+    @frog_top_cache = { 1 => [[1]],
+                        2 => [[1, 1], [2]],
+                        3 => [[1, 1, 1], [1, 2], [2, 1], [3]] }
     @super_frog_cache = {}
     @knapsack_cache = {}
     @maze_cache = {}
@@ -33,20 +34,33 @@ class DynamicProgramming
     cache = { 1 => [[1]],
               2 => [[1, 1], [2]],
               3 => [[1, 1, 1], [1, 2], [2, 1], [3]] }
+    return cache if n <= 3
 
-    return cache[n] if n <= 3
-    i = 1
-    first_jump_count = cache[i]
+    soln = []
+    (4..n).each do |step|
+      frog_cache_builder(step - 1)[step - 1].each do |el|
+        soln << (el << 1)
+      end
 
-    until first_jump_count > n
-      soln = frog_cache_builder(n-1).each {|el| el + cache[first_jump_count] }
+      frog_cache_builder(step - 2)[step - 2].each do |el|
+        soln << (el << 2)
+      end
 
-      first_jump_count += cache[i][0]
+      frog_cache_builder(step - 3)[step - 3].each do |el|
+        soln << (el << 3)
+      end
     end
+    cache[n] = soln
+    cache
   end
 
   def frog_hops_top_down(n)
+    return @frog_top_cache[n] unless @frog_top_cache[n].nil?
 
+    frog_hops_top_down_helper(n)
+    ans = @frog_hops_top_down[n - 1]
+
+    @frog_top_cache[n] = ans
   end
 
   def frog_hops_top_down_helper(n)
