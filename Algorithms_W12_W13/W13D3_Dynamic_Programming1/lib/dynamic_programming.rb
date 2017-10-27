@@ -2,12 +2,7 @@ class DynamicProgramming
 
   def initialize
     @blair_cache = { 1 => 1, 2 => 2 }
-    @frog_top_cache = { 1 => [[1]],
-                        2 => [[1, 1], [2]],
-                        3 => [[1, 1, 1], [1, 2], [2, 1], [3]] }
-    @super_frog_cache = {}
-    @knapsack_cache = {}
-    @maze_cache = {}
+    @frog_top_cache = [ [[]], [[1]], [[1, 1], [2]] ]
   end
 
   def blair_nums(n)
@@ -17,58 +12,79 @@ class DynamicProgramming
     # plus the (k - 1)th odd number. For example,
     # b3 = b2 + b1 + 2nd odd = 1 + 2 + 3 = 6.
 
-    return @blair_cache[n] unless @blair_cache[n].nil?
+    return @blair_cache[n] if @blair_cache[n]
     blair_num = blair_nums(n - 1) + blair_nums(n - 2) + ((n - 1) * 2 - 1)
     @blair_cache[n] = blair_num
-
-    blair_num
   end
 
   def frog_hops_bottom_up(n)
     cache = frog_cache_builder(n)
-
     cache[n]
   end
 
   def frog_cache_builder(n)
-    cache = { 1 => [[1]],
-              2 => [[1, 1], [2]],
-              3 => [[1, 1, 1], [1, 2], [2, 1], [3]] }
-    return cache if n <= 3
+    cache = [ [[]], [[1]], [[1, 1], [2]] ]
+    return cache if n < 3
 
-    soln = []
-    (4..n).each do |step|
-      frog_cache_builder(step - 1)[step - 1].each do |el|
-        soln << (el << 1)
+    (3..n).each do |i|
+      new_way_set = []
+      (1..3).each do |first_step|
+        cache[i - first_step].each do |way|
+          new_way = [first_step]
+          way.each do |step|
+            new_way << step
+          end
+          new_way_set << new_way
+        end
       end
-
-      frog_cache_builder(step - 2)[step - 2].each do |el|
-        soln << (el << 2)
-      end
-
-      frog_cache_builder(step - 3)[step - 3].each do |el|
-        soln << (el << 3)
-      end
+      cache << new_way_set
     end
-    cache[n] = soln
     cache
   end
 
   def frog_hops_top_down(n)
-    return @frog_top_cache[n] unless @frog_top_cache[n].nil?
-
     frog_hops_top_down_helper(n)
-    ans = @frog_hops_top_down[n - 1]
-
-    @frog_top_cache[n] = ans
   end
 
   def frog_hops_top_down_helper(n)
-
+    return @frog_top_cache[n] if @frog_top_cache[n]
+    new_way_set = []
+    (1..3).each do |first_step|
+      frog_hops_top_down_helper(n - first_step).each do |way|
+        new_way = [first_step]
+        way.each do |step|
+          new_way << step
+        end
+        new_way_set << new_way
+      end
+    end
+    @frog_top_cache[n] = new_way_set
   end
 
   def super_frog_hops(n, k)
+    # n = num of stairs
+    # k = max stairs that can be hopped at once
 
+    all_ways = [ [[]], [[1]] ]
+
+    return all_ways[n] if n < 2
+
+    (2..n).each do |i|
+      new_way_set = []
+      (1..k).each do |first_step|
+        next if i - first_step < 0
+        all_ways[i - first_step].each do |way|
+          new_way = [first_step]
+          way.each do |step|
+            new_way << step
+          end
+          new_way_set << new_way
+        end
+      end
+      all_ways << new_way_set
+    end
+
+    all_ways[n]
   end
 
   def knapsack(weights, values, capacity)
