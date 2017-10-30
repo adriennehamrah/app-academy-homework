@@ -87,14 +87,45 @@ class DynamicProgramming
     all_ways[n]
   end
 
+  # knapsack takes in an array of weights, an array of values, and a
+  # weight capacity and returns the maximum value possible given the
+  # weight constraint.
   def knapsack(weights, values, capacity)
-
+      return 0 if capacity == 0 || weights.length == 0
+      solution_table = knapsack_table(weights, values, capacity)
+      solution_table[capacity][-1]
   end
 
-  # Helper method for bottom-up implementation
-  def knapsack_table(weights, values, capacity)
-
+# Helper method for bottom-up implementation
+def knapsack_table(weights, values, capacity)
+  solution_table = []
+  # Build solutions for knapsacks of increasing capacity
+  (0..capacity).each do |i|
+    solution_table[i] = []
+    # go through the weights one by one, by index
+    (0..weights.length - 1).each do |j|
+      if i == 0
+        # if the capacity is 0, then 0 is how much value can be placed in any slot
+        solution_table[i][j] = 0
+      elsif j == 0
+        # for the first item in our list, you must check for capacity
+        # if there is, then you enter its value in the first slot, otherwise 0
+        solution_table[i][j] = weights[0] > i ? 0 : values[0]
+      else
+        # the first option is the entry from considering the previous item at this capacity
+        option1 = solution_table[i][j - 1]
+        # the second option (assuming enough capacity) is the entry from a smaller bag
+        # (with enough room for this item) plus this item's value
+        option2 = i < weights[j] ? 0 : solution_table[i - weights[j]][j - 1] + values[j]
+        # the actual entry for this item is the optimum of the two choices
+        optimum = [option1, option2].max
+        solution_table[i][j] = optimum
+      end
+    end
   end
+
+  solution_table
+end
 
   def maze_solver(maze, start_pos, end_pos)
   end
